@@ -613,29 +613,33 @@ def publish_discovery(dev, sub=''):
         mqttc.publish(topic, json.dumps(payload))
         if logtxt != "" and config.get('Log', 'show_mqtt_publish') == 'True':
             logging.info(logtxt)
-    elif dev == 'elevator':
-        topic = 'homeassistant/elevator/kocom_wallpad_elevator/config'
-        payload = {
-            'name': 'Kocom Wallpad Elevator',
-            'cmd_t': "kocom/myhome/elevator/command",
-            'stat_t': "kocom/myhome/elevator/state",
-            'val_tpl': "{{ value_json.state }}",
-            'pl_on': 'on',
-            'pl_off': 'off',
-            'qos': 0,
-            'uniq_id': '{}_{}_{}'.format('kocom', 'wallpad', dev),
-            'device': {
-                'name': '코콤 스마트 월패드',
-                'ids': 'kocom_smart_wallpad',
-                'mf': 'KOCOM',
-                'mdl': '스마트 월패드',
-                'sw': SW_VERSION
-            }
-        }
-        logtxt='[MQTT Discovery|{}] data[{}]'.format(dev, topic)
-        mqttc.publish(topic, json.dumps(payload))
-        if logtxt != "" and config.get('Log', 'show_mqtt_publish') == 'True':
-            logging.info(logtxt)
+         
+elif dev == 'elevator':
+for i in ['elevator', 'evsensor']:
+component = 'switch' if i == 'elevator' else 'sensor'
+topic = f'homeassistant/{component}/kocom_wallpad_{i}/config'
+payload = {
+'name': f'Kocom Wallpad {i}',
+'cmd_t': "kocom/myhome/elevator/command",
+'stat_t': "kocom/myhome/elevator/state",
+'val_tpl': "{{ value_json.floor }}",
+'pl_on': 'on',
+'pl_off': 'off',
+'qos': 0,
+'uniq_id': '{}_{}_{}'.format('kocom', 'wallpad', i),
+'device': {
+'name': '코콤 스마트 월패드',
+'ids': 'kocom_smart_wallpad',
+'mf': 'KOCOM',
+'mdl': '스마트 월패드',
+'sw': SW_VERSION
+}
+}
+logtxt='[MQTT Discovery|{}] data[{}]'.format(i, topic)
+mqttc.publish(topic, json.dumps(payload))
+if logtxt != "" and config.get('Log', 'show_mqtt_publish') == 'True':
+logging.info(logtxt)
+
     elif dev == 'light':
         for num in range(1, int(config.get('User', 'light_count'))+1):
             #ha_topic = 'homeassistant/light/kocom_livingroom_light1/config'
