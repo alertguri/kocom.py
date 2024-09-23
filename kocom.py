@@ -616,7 +616,7 @@ def publish_discovery(dev, sub=''):
     elif dev == 'elevator':
      for i in ['elevator', 'evsensor']:
       component = 'switch' if i == 'elevator' else 'sensor'
-        topic = 'homeassistant/{component}/kocom_wallpad_{i}/config'
+       topic = 'homeassistant/{component}/kocom_wallpad_{i}/config'
         payload = {
             'name': 'Kocom Wallpad {i}',
             'cmd_t': "kocom/myhome/elevator/command",
