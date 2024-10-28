@@ -546,7 +546,7 @@ def packet_processor(p):
         if rs485_floor != 0 :
          if p['value'] == '0300000000000000' :
             state = {'floor': 'off'}
-        else:
+         else:
             state = {'state': 'off'}
         logtxt='[MQTT publish|elevator] data[{}]'.format(state)
         mqttc.publish("kocom/myhome/elevator/state", json.dumps(state))
