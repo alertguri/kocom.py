@@ -647,7 +647,7 @@ def publish_discovery(dev, sub=''):
         component = 'sensor'
         topic = f'homeassistant/{component}/kocom_wallpad_{dev}/config'
         payload = {
-            'name': 'Kocom Wallpad Evarrival',
+            'name': '엘리베이터 도착',
             'stat_t': "kocom/myhome/evarrival/state",
             'val_tpl': "{{ value_json.state }}",
             'qos': 0,
