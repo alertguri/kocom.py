@@ -4,7 +4,7 @@
 '''
  python kocom script
 
- : forked from script written by ?좎옄, 猷곕（?댄뵾, ?곕텇, Susu Daddy
+ : forked from script written by 날자, 룰루해피, 따분, Susu Daddy
 
  apt-get install mosquitto
  python3 -m pip install pyserial
@@ -585,10 +585,10 @@ def publish_discovery(dev, sub=''):
             'qos': 0,
             'uniq_id': '{}_{}_{}'.format('kocom', 'wallpad', dev),
             'device': {
-                'name': '肄붿숴 ?ㅻ쭏???뷀뙣??,
+                'name': '코콤 스마트 월패드',
                 'ids': 'kocom_smart_wallpad',
                 'mf': 'KOCOM',
-                'mdl': '?ㅻ쭏???뷀뙣??,
+                'mdl': '스마트 월패드',
                 'sw': SW_VERSION
             }
         }
@@ -608,10 +608,10 @@ def publish_discovery(dev, sub=''):
             'qos': 0,
             'uniq_id': '{}_{}_{}'.format('kocom', 'wallpad', dev),
             'device': {
-                'name': '肄붿숴 ?ㅻ쭏???뷀뙣??,
+                'name': '코콤 스마트 월패드',
                 'ids': 'kocom_smart_wallpad',
                 'mf': 'KOCOM',
-                'mdl': '?ㅻ쭏???뷀뙣??,
+                'mdl': '스마트 월패드',
                 'sw': SW_VERSION
             }
         }
@@ -632,10 +632,10 @@ def publish_discovery(dev, sub=''):
             'qos': 0,
             'uniq_id': '{}_{}_{}'.format('kocom', 'wallpad', dev),
             'device': {
-                'name': '肄붿숴 ?ㅻ쭏???뷀뙣??,
+                'name': '코콤 스마트 월패드',
                 'ids': 'kocom_smart_wallpad',
                 'mf': 'KOCOM',
-                'mdl': '?ㅻ쭏???뷀뙣??,
+                'mdl': '스마트 월패드',
                 'sw': SW_VERSION
             }
         }
@@ -653,10 +653,10 @@ def publish_discovery(dev, sub=''):
             'qos': 0,
             'uniq_id': '{}_{}_{}'.format('kocom', 'wallpad', dev),
             'device': {
-                'name': '肄붿숴 ?ㅻ쭏???뷀뙣??,
+                'name': '코콤 스마트 월패드',
                 'ids': 'kocom_smart_wallpad',
                 'mf': 'KOCOM',
-                'mdl': '?ㅻ쭏???뷀뙣??,
+                'mdl': '스마트 월패드',
                 'sw': SW_VERSION
             }
         }
@@ -678,10 +678,10 @@ def publish_discovery(dev, sub=''):
                 'qos': 0,
                 'uniq_id': '{}_{}_{}{}'.format('kocom', 'wallpad', dev, num),
                 'device': {
-                    'name': '肄붿숴 ?ㅻ쭏???뷀뙣??,
+                    'name': '코콤 스마트 월패드',
                     'ids': 'kocom_smart_wallpad',
                     'mf': 'KOCOM',
-                    'mdl': '?ㅻ쭏???뷀뙣??,
+                    'mdl': '스마트 월패드',
                     'sw': SW_VERSION
                 }
             }
@@ -710,10 +710,10 @@ def publish_discovery(dev, sub=''):
             'qos': 0,
             'uniq_id': '{}_{}_{}{}'.format('kocom', 'wallpad', dev, num),
             'device': {
-                'name': '肄붿숴 ?ㅻ쭏???뷀뙣??,
+                'name': '코콤 스마트 월패드',
                 'ids': 'kocom_smart_wallpad',
                 'mf': 'KOCOM',
-                'mdl': '?ㅻ쭏???뷀뙣??,
+                'mdl': '스마트 월패드',
                 'sw': SW_VERSION
             }
         }
@@ -729,10 +729,10 @@ def publish_discovery(dev, sub=''):
             'qos': 0,
             'uniq_id': '{}_{}_{}'.format('kocom', 'wallpad', dev),
             'device': {
-                'name': '肄붿숴 ?ㅻ쭏???뷀뙣??,
+                'name': '코콤 스마트 월패드',
                 'ids': 'kocom_smart_wallpad',
                 'mf': 'KOCOM',
-                'mdl': '?ㅻ쭏???뷀뙣??,
+                'mdl': '스마트 월패드',
                 'sw': SW_VERSION
             }
         }
