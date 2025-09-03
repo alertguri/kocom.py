@@ -24,7 +24,7 @@ import configparser
 
 
 # define -------------------------------
-SW_VERSION = '2025.09.01'
+SW_VERSION = '2024.10.28'
 CONFIG_FILE = 'kocom.conf'
 BUF_SIZE = 100
 
@@ -619,48 +619,25 @@ def publish_discovery(dev, sub=''):
         mqttc.publish(topic, json.dumps(payload))
         if logtxt != "" and config.get('Log', 'show_mqtt_publish') == 'True':
             logging.info(logtxt)
-# 기존의 elif dev == 'elevator': 블록 전체를 이 코드로 교체하세요.
-
     elif dev == 'elevator':
-        for i in ['elevator', 'evsensor']:
-            component = 'switch' if i == 'elevator' else 'sensor'
-            topic = f'homeassistant/{component}/kocom_wallpad_{i}/config'
-            
-            # 'elevator'는 스위치, 'evsensor'는 센서로 각각에 맞는 payload를 생성
-            if i == 'elevator':
-                payload = {
-                    'name': 'Kocom Wallpad Elevator',
-                    'cmd_t': "kocom/myhome/elevator/command",
-                    'stat_t': "kocom/myhome/elevator/state",
-                    'val_tpl': "{{ value_json.state }}",  # 스위치는 on/off 상태를 사용
-                    'pl_on': 'on',
-                    'pl_off': 'off'
-                }
-            else: # i == 'evsensor'
-                payload = {
-                    'name': 'Kocom Wallpad EVSensor',
-                    'stat_t': "kocom/myhome/elevator/state",
-                    'val_tpl': "{{ value_json.floor }}" # 센서는 층수 정보를 사용
-                }
-            
-            # 공통 속성을 payload에 추가
-            payload.update({
-                'qos': 0,
-                'uniq_id': f'kocom_wallpad_{i}',
-                'device': {
-                    'name': '코콤 스마트 월패드',
-                    'ids': 'kocom_smart_wallpad',
-                    'mf': 'KOCOM',
-                    'mdl': '스마트 월패드',
-                    'sw': SW_VERSION
-                }
-            })
-            
-            # 생성된 payload를 즉시 발행
-            logtxt=f'[MQTT Discovery|{i}] data[{topic}]'
-            mqttc.publish(topic, json.dumps(payload))
-            if config.get('Log', 'show_mqtt_publish') == 'True':
-                logging.info(logtxt)
+        component = 'switch'
+        topic = f'homeassistant/{component}/kocom_wallpad_{dev}/config'
+        payload = {
+            'name': 'Kocom Wallpad Elevator',
+            'cmd_t': "kocom/myhome/elevator/command",
+            'stat_t': "kocom/myhome/elevator/state",
+            'val_tpl': "{{ value_json.floor }}",
+            'pl_on': 'on',
+            'pl_off': 'off',
+            'qos': 0,
+            'uniq_id': '{}_{}_{}'.format('kocom', 'wallpad', dev),
+            'device': {
+                'name': '코콤 스마트 월패드',
+                'ids': 'kocom_smart_wallpad',
+                'mf': 'KOCOM',
+                'mdl': '스마트 월패드',
+                'sw': SW_VERSION
+            }
         }
         logtxt='[MQTT Discovery|{}] data[{}]'.format(dev, topic)
         mqttc.publish(topic, json.dumps(payload))
@@ -671,6 +648,7 @@ def publish_discovery(dev, sub=''):
         topic = f'homeassistant/{component}/kocom_wallpad_{dev}/config'
         payload = {
             'name': 'Kocom Wallpad Evarrival',
+            'name': '엘리베이터 도착',
             'stat_t': "kocom/myhome/evarrival/state",
             'val_tpl': "{{ value_json.state }}",
             'qos': 0,
@@ -772,7 +750,6 @@ def poll_state(enforce=False):
     poll_timer.cancel()
 
     dev_list = [x.strip() for x in config.get('Device','enabled').split(',')]
-    no_polling_list = ['wallpad', 'elevator']
     no_polling_list = ['wallpad', 'elevator', 'evarrival']
 
     #thread health check
@@ -843,7 +820,6 @@ def read_serial():
                         not_parsed_buf += buf
                         buf=''
                     else:
-                        not_parsed_buf += buf[:frame_start]
                         not_parsed_buf += buf[frame_start:]
                         buf = buf[frame_start:]
         except Exception as ex:
