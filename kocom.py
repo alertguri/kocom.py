@@ -460,11 +460,11 @@ def mqtt_on_message(mqttc, obj, msg):
             if ret_elevator == False:
                 logging.debug('elevator send failed')
                 return
-       
+
             threading.Thread(target=mqttc.publish, args=("kocom/myhome/elevator/state", state_on)).start()
             if config.get('Elevator', 'rs485_floor', fallback=None) == None:
                 threading.Timer(5, mqttc.publish, args=("kocom/myhome/elevator/state", state_off)).start()
- 
+
         elif command == 'off':
             threading.Thread(target=mqttc.publish, args=("kocom/myhome/elevator/state", state_off)).start()
 
@@ -620,6 +620,25 @@ def publish_discovery(dev, sub=''):
         if logtxt != "" and config.get('Log', 'show_mqtt_publish') == 'True':
             logging.info(logtxt)
     elif dev == 'elevator':
+        for i in ['elevator', 'evsensor']: 
+            component = 'switch' if i == 'elevator' else 'sensor'
+            topic = f'homeassistant/{component}/kocom_wallpad_{i}/config'
+            payload = {
+                'name': f'Kocom Wallpad {i}',
+                'cmd_t': "kocom/myhome/elevator/command",
+                'stat_t': "kocom/myhome/elevator/state",
+                'val_tpl': "{{ value_json.floor }}",
+                'pl_on': 'on',
+                'pl_off': 'off',
+                'qos': 0,
+                'uniq_id': '{}_{}_{}'.format('kocom', 'wallpad', i),
+                'device': {
+                    'name': '코콤 스마트 월패드',
+                    'ids': 'kocom_smart_wallpad',
+                    'mf': 'KOCOM',
+                    'mdl': '스마트 월패드',
+                    'sw': SW_VERSION
+                }
         component = 'switch'
         topic = f'homeassistant/{component}/kocom_wallpad_{dev}/config'
         payload = {
@@ -638,6 +657,10 @@ def publish_discovery(dev, sub=''):
                 'mdl': '스마트 월패드',
                 'sw': SW_VERSION
             }
+            logtxt='[MQTT Discovery|{}] data[{}]'.format(i, topic)
+            mqttc.publish(topic, json.dumps(payload))
+            if logtxt != "" and config.get('Log', 'show_mqtt_publish') == 'True':
+                logging.info(logtxt)
         }
         logtxt='[MQTT Discovery|{}] data[{}]'.format(dev, topic)
         mqttc.publish(topic, json.dumps(payload))
@@ -749,6 +772,7 @@ def poll_state(enforce=False):
     poll_timer.cancel()
 
     dev_list = [x.strip() for x in config.get('Device','enabled').split(',')]
+    no_polling_list = ['wallpad', 'elevator']
     no_polling_list = ['wallpad', 'elevator', 'evarrival']
 
     #thread health check
@@ -797,7 +821,7 @@ def read_serial():
                 else:
                     not_parsed_buf = not_parsed_buf[:frame_start]
                     buf = not_parsed_buf[frame_start:]
-            
+
             if not_parsed_buf != '':
                 logging.info('[comm] not parsed '+not_parsed_buf)
                 not_parsed_buf = ''
@@ -819,6 +843,7 @@ def read_serial():
                         not_parsed_buf += buf
                         buf=''
                     else:
+                        not_parsed_buf += buf[:frame_start]
                         not_parsed_buf += buf[frame_start:]
                         buf = buf[frame_start:]
         except Exception as ex:
@@ -836,7 +861,7 @@ def listen_hexdata():
 
         if config.get('Log', 'show_recv_hex') == 'True':
             logging.info("[recv] " + d)
- 
+
         p_ret = parse(d)
 
         # store recent packets in cache
@@ -847,7 +872,7 @@ def listen_hexdata():
         if p_ret['data_h'] in ack_data:
             ack_q.put(d)
             continue
- 
+
         if wait_target.empty() == False:
             if p_ret['dest_h'] == wait_target.queue[0] and p_ret['type'] == 'ack':
             #if p_ret['src_h'] == wait_target.queue[0] and p_ret['type'] == 'send':
